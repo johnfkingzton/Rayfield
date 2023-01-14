@@ -167,6 +167,7 @@ local Minimised = false
 local Hidden = false
 local Debounce = false
 local Notifications = Rayfield.Notifications
+searchBarHandler.__index = function(_, i) return rawget(searchBarHandler, i) or rawget(elementHandler, i) end
 
 local SelectedTheme = RayfieldLibrary.Theme.Default
 
