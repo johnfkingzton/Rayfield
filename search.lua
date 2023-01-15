@@ -1695,6 +1695,7 @@ function RayfieldLibrary:CreateWindow(Settings)
 				local search = string.lower(Input.InputFrame.InputBox.Title.Text)
 				for i, v in	 pairs(TabPage:GetChildren()) do
 					if v:IsA("Frame") then
+						Print("is frame")
 						if search ~= "" then
 							if v.Name == "Button" then
 								local item = string.lower(v.Title.Text)
