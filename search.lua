@@ -1697,16 +1697,16 @@ function RayfieldLibrary:CreateWindow(Settings)
 					for _, Element in ipairs(TabPage:GetChildren()) do
 						if Element.ClassName == "Frame" then
 							if search ~= "" then
-								elseif v.Name == "Toggle" then
+								elseif Element.Name == "Toggle" then
 									local item = string.lower(Element.Title.Text)
 									if string.find(item, search) then
-										v.Visible = true
+										Element.Visible = true
 									else
-										v.Visible = false
+										Element.Visible = false
 									end
 								end
 							else
-								v.Visible = true
+								Element.Visible = true
 							end
 						end
 					end
