@@ -1697,6 +1697,7 @@ function RayfieldLibrary:CreateWindow(Settings)
 					for _, Element in ipairs(TabPage:GetChildren()) do
 						if Element.ClassName == "Frame" then
 							print(search)
+							print(Element.Name)
 							if search ~= "" then
 								if Element.Name == "Button" then
 									local item = string.lower(Element.Title.Text)
