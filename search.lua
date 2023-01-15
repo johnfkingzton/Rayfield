@@ -1695,19 +1695,8 @@ function RayfieldLibrary:CreateWindow(Settings)
 				local search = string.lower(Input.InputFrame.InputBox.Text)
 				for _, TabPage in ipairs(Elements:GetChildren()) do
 					for _, Element in ipairs(TabPage:GetChildren()) do
-						if Element.ClassName == "Frame" then
-							if search ~= "" then
-								elseif Element.Name == "Toggle" then
-									local item = string.lower(Element.Title.Text)
-									if string.find(item, search) then
-										Element.Visible = true
-									else
-										Element.Visible = false
-									end
-								end
-							else
-								Element.Visible = true
-							end
+						if Element.ClassName == "Frame" and Element.Name ~= "Placeholder" and Element.Name ~= "SectionSpacing" and Element.Name ~= "SectionTitle"  then
+							print(search)
 						end
 					end
 				end
