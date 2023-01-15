@@ -1690,7 +1690,61 @@ function RayfieldLibrary:CreateWindow(Settings)
 
 			Input.InputFrame.InputBox.PlaceholderText = InputSettings.PlaceholderText
 			Input.InputFrame.Size = UDim2.new(0, Input.InputFrame.InputBox.TextBounds.X + 24, 0, 30)
-
+			Input.InputFrame.InputBox.Changed:Connect(function()
+				local search = string.lower(SearchBox.Text)
+				for i, v in	 pairs(SectionContainer:GetChildren()) do
+					if v:IsA("Frame") then
+						if search ~= "" then
+							if v.Name == "Button" then
+								local item = string.lower(v.Title.Text)
+								if string.find(item, search) then
+									v.Visible = true
+								else
+									v.Visible = false
+								end
+							elseif v.Name == "Label" then
+								local item = string.lower(v.LabelContent.Text)
+								if string.find(item, search) then
+									v.Visible = true
+								else
+									v.Visible = false
+								end
+							elseif v.Name == "Slider" then
+								local item = string.lower(v.Title.Text)
+								if string.find(item, search) then
+									v.Visible = true
+								else
+									v.Visible = false
+								end
+							elseif v.Name == "TextBox" then
+								local item = string.lower(v.Container.TextInput.Text)
+								if string.find(item, search) then
+									v.Visible = true
+								else
+									v.Visible = false
+								end
+							elseif v.Name == "Keybind" then
+								local item = string.lower(v.Container.Title.Text)
+								if string.find(item, search) then
+									v.Visible = true
+								else
+									v.Visible = false
+								end
+							elseif v.Name == "Toggle" then
+								local item = string.lower(v.Title.Text)
+								if string.find(item, search) then
+									v.Visible = true
+								else
+									v.Visible = false
+								end
+							end
+						else
+							v.Visible = true
+						end
+					end
+				end
+			end)
+			
 			Input.InputFrame.InputBox.FocusLost:Connect(function()
 				
 				
@@ -1726,7 +1780,7 @@ function RayfieldLibrary:CreateWindow(Settings)
 				TweenService:Create(Input.InputFrame, TweenInfo.new(0.55, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {Size = UDim2.new(0, Input.InputFrame.InputBox.TextBounds.X + 24, 0, 30)}):Play()
 			end)
 		end
-		SearchBox.Changed:Connect(UpdateResults)
+		--SearchBox.Changed:Connect(UpdateResults)
 		-- Input
 		function Tab:CreateInput(InputSettings)
 			local Input = Elements.Template.Input:Clone()
