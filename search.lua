@@ -15,7 +15,7 @@ local NotificationDuration = 6.5
 local RayfieldFolder = "Rayfield"
 local ConfigurationFolder = RayfieldFolder.."/Configurations"
 local ConfigurationExtension = ".rfld"
-local searchBarHandler = {}
+
 
 
 local RayfieldLibrary = {
@@ -167,7 +167,6 @@ local Minimised = false
 local Hidden = false
 local Debounce = false
 local Notifications = Rayfield.Notifications
-searchBarHandler.__index = function(_, i) return rawget(searchBarHandler, i) or rawget(elementHandler, i) end
 
 local SelectedTheme = RayfieldLibrary.Theme.Default
 
@@ -1615,8 +1614,63 @@ function RayfieldLibrary:CreateWindow(Settings)
 			return ParagraphValue
 		end
 
-		-- Input
-		function Tab:CreateInput(InputSettings)
+
+		function UpdateResults()
+			local search = string.lower(SearchBox.Text)
+			for i, v in	 pairs(SectionContainer:GetChildren()) do
+				if v:IsA("Frame") then
+					if search ~= "" then
+						if v.Name == "Button" then
+							local item = string.lower(v.Title.Text)
+							if string.find(item, search) then
+								v.Visible = true
+							else
+								v.Visible = false
+							end
+						elseif v.Name == "Label" then
+							local item = string.lower(v.LabelContent.Text)
+							if string.find(item, search) then
+								v.Visible = true
+							else
+								v.Visible = false
+							end
+						elseif v.Name == "Slider" then
+							local item = string.lower(v.Title.Text)
+							if string.find(item, search) then
+								v.Visible = true
+							else
+								v.Visible = false
+							end
+						elseif v.Name == "TextBox" then
+							local item = string.lower(v.Container.TextInput.Text)
+							if string.find(item, search) then
+								v.Visible = true
+							else
+								v.Visible = false
+							end
+						elseif v.Name == "Keybind" then
+							local item = string.lower(v.Container.Title.Text)
+							if string.find(item, search) then
+								v.Visible = true
+							else
+								v.Visible = false
+							end
+						elseif v.Name == "Toggle" then
+							local item = string.lower(v.Title.Text)
+							if string.find(item, search) then
+								v.Visible = true
+							else
+								v.Visible = false
+							end
+						end
+					else
+						v.Visible = true
+					end
+				end
+			end
+		end
+		-- Search
+		function Tab:CreateSearch(InputSettings)
 			local Input = Elements.Template.Input:Clone()
 			Input.Name = InputSettings.Name
 			Input.Title.Text = InputSettings.Name
@@ -1673,159 +1727,62 @@ function RayfieldLibrary:CreateWindow(Settings)
 			end)
 		end
 
-		--Search Dropdown
-		function Tab:SearchBar(placeholderText: string): table
-			local searchBar = setmetatable({}, searchBarHandler)
-			local searchBarInstance = originalElements.SearchBar:Clone()
-			local searchBox = searchBarInstance.SearchBarFrame.ButtonBackgroundPadding.SearchBox
-			local elementHolder = searchBarInstance.ElementHolder
-			local elementHolderBackground = elementHolder.ElementHolderBackground
-			local elementHolderInnerBackground = elementHolderBackground.ElementHolderInnerBackground
-			local elementHolderInnerBackgroundPaddings = elementHolder.ElementHolderPadding.PaddingBottom.Offset + elementHolder.ElementHolderPadding.PaddingTop.Offset + elementHolderBackground.ElementHolderBackgroundPadding.PaddingBottom.Offset + elementHolderBackground.ElementHolderBackgroundPadding.PaddingTop.Offset + elementHolderInnerBackground.ElementHolderInnerBackgroundPadding.PaddingBottom.Offset + elementHolderInnerBackground.ElementHolderInnerBackgroundPadding.PaddingTop.Offset
-			local searchBarInstanceCloseTween = TweenService:Create(searchBarInstance, TweenInfo.new(.25, Enum.EasingStyle.Linear), {Size = UDim2.new(1,0,0,searchBarInstance.SearchBarFrame.Size.Y.Offset)})
-			local searchBarInstanceOpenTween
-			local isMouseHoveringOver = false
-			local mouseEnterConnection
-			local mouseLeftConnection
-			local uisFocusLost
-			local playingAnimation
-			local searchingText
+		-- Input
+		function Tab:CreateInput(InputSettings)
+			local Input = Elements.Template.Input:Clone()
+			Input.Name = InputSettings.Name
+			Input.Title.Text = InputSettings.Name
+			Input.Visible = true
+			Input.Parent = TabPage
+
+			Input.BackgroundTransparency = 1
+			Input.UIStroke.Transparency = 1
+			Input.Title.TextTransparency = 1
 			
-			placeholderText = placeholderText or "N/A"
-		
-			local function onTextChanged()
-				if searchBar.IsExpanded then
-					if searchingText then coroutine.close(searchingText) end
-					searchingText = coroutine.create(function()
-						for _, foundElement in ipairs(elementHolderInnerBackground:GetChildren()) do
-							local foundElementInfo = searchBar.ChildedElementsInfo[foundElement]
-							if foundElementInfo ~= nil then
-								if foundElementInfo.IdentifierText:lower():find(searchBox.Text:lower(), 1, true) then
-									foundElement.Visible = true
-								else
-									foundElement.Visible = false
-								end
-							end
-						end
-						searchingText = nil
-					end)
-					coroutine.resume(searchingText)
-				end
-			end
-			
-			local function onFocused()
-				elementHolderInnerBackground.Visible = true
-				searchBar.IsExpanded = true
-				onTextChanged()
-				isMouseHoveringOver = true
-				searchBarInstanceOpenTween:Play()
+			Input.InputFrame.BackgroundColor3 = SelectedTheme.InputBackground
+			Input.InputFrame.UIStroke.Color = SelectedTheme.InputStroke
+
+			TweenService:Create(Input, TweenInfo.new(0.7, Enum.EasingStyle.Quint), {BackgroundTransparency = 0}):Play()
+			TweenService:Create(Input.UIStroke, TweenInfo.new(0.7, Enum.EasingStyle.Quint), {Transparency = 0}):Play()
+			TweenService:Create(Input.Title, TweenInfo.new(0.7, Enum.EasingStyle.Quint), {TextTransparency = 0}):Play()	
+
+			Input.InputFrame.InputBox.PlaceholderText = InputSettings.PlaceholderText
+			Input.InputFrame.Size = UDim2.new(0, Input.InputFrame.InputBox.TextBounds.X + 24, 0, 30)
+
+			Input.InputFrame.InputBox.FocusLost:Connect(function()
 				
-				if playingAnimation then
-					coroutine.close(playingAnimation) 
-					searchBox.PlaceholderText = placeholderText
-					searchBox.Text = ""
+				
+				local Success, Response = pcall(function()
+					InputSettings.Callback(Input.InputFrame.InputBox.Text)
+				end)
+				if not Success then
+					TweenService:Create(Input, TweenInfo.new(0.6, Enum.EasingStyle.Quint), {BackgroundColor3 = Color3.fromRGB(85, 0, 0)}):Play()
+					TweenService:Create(Input.UIStroke, TweenInfo.new(0.6, Enum.EasingStyle.Quint), {Transparency = 1}):Play()
+					Input.Title.Text = "Callback Error"
+					print("Rayfield | "..InputSettings.Name.." Callback Error " ..tostring(Response))
+					wait(0.5)
+					Input.Title.Text = InputSettings.Name
+					TweenService:Create(Input, TweenInfo.new(0.6, Enum.EasingStyle.Quint), {BackgroundColor3 = SelectedTheme.ElementBackground}):Play()
+					TweenService:Create(Input.UIStroke, TweenInfo.new(0.6, Enum.EasingStyle.Quint), {Transparency = 0}):Play()
 				end
 				
-				mouseLeftConnection = searchBarInstance.MouseLeave:Connect(function()
-					isMouseHoveringOver = false
-					
-					if not searchBox:IsFocused() then
-						searchBar.IsExpanded = false
-						searchBarInstanceCloseTween:Play()
-						mouseLeftConnection:Disconnect()
-						mouseEnterConnection:Disconnect()
-						uisFocusLost:Disconnect()
-						
-						searchBarInstanceCloseTween.Completed:Connect(function(playbackState)
-							if playbackState == Enum.PlaybackState.Completed then
-								elementHolderInnerBackground.Visible = false
-							end
-						end)
-		
-						if playingAnimation then coroutine.close(playingAnimation) end
-						playingAnimation = coroutine.create(function()
-							searchBox.PlaceholderText = ""
-							animateText(searchBox, .025, nil, placeholderText, true)
-							playingAnimation = nil
-						end)
-						coroutine.resume(playingAnimation)
-					end
-				end)
-				
-				mouseEnterConnection = searchBarInstance.MouseEnter:Connect(function()
-					isMouseHoveringOver = true
-				end)
-				
-				uisFocusLost = UserInputService.TextBoxFocusReleased:Connect(function(textBoxReleased)
-					if textBoxReleased == searchBox then
-						if not isMouseHoveringOver then
-							searchBar.IsExpanded = false
-							searchBarInstanceCloseTween:Play()
-							mouseLeftConnection:Disconnect()
-							mouseEnterConnection:Disconnect()
-							uisFocusLost:Disconnect()
-		
-							searchBarInstanceCloseTween.Completed:Connect(function(playbackState)
-								if playbackState == Enum.PlaybackState.Completed then
-									elementHolderInnerBackground.Visible = false
-								end
-							end)
-		
-							if playingAnimation then coroutine.close(playingAnimation) end
-							playingAnimation = coroutine.create(function()
-								searchBox.PlaceholderText = ""
-								animateText(searchBox, .025, nil, placeholderText, true)
-								playingAnimation = nil
-							end)
-							coroutine.resume(playingAnimation)
-						end
-					end
-				end)
-			end
-			
-			searchBar.Type = "SearchBar"
-			searchBar.IdentifierText = placeholderText or "N/A"
-			searchBar.Instance = searchBarInstance
-			searchBar.GuiToRemove = searchBarInstance
-			searchBar.ElementToParentChildren = elementHolderInnerBackground
-			searchBar.ChildedElementsInfo = {}
-			searchBar.IsExpanded = false
-			
-			if self.Type == "SearchBar" then
-				self.ChildedElementsInfo[searchBarInstance] = searchBar
-			end
-			
-			searchBox:GetPropertyChangedSignal("Text"):Connect(onTextChanged)
-			searchBox.Focused:Connect(onFocused)
-			
-			elementHolderInnerBackground.ElementHolderInnerBackgroundList:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
-				if searchBar.IsExpanded then
-					if elementHolderInnerBackground.ElementHolderInnerBackgroundList.AbsoluteContentSize.Y == 0 then
-						searchBarInstanceOpenTween = TweenService:Create(searchBarInstance, TweenInfo.new(.25, Enum.EasingStyle.Linear), {Size = UDim2.new(1,0,0,searchBarInstance.SearchBarFrame.Size.Y.Offset)})
-					else
-						local elementHolderOpenTween = TweenService:Create(elementHolder, TweenInfo.new(.25, Enum.EasingStyle.Linear), {Size = UDim2.new(.925,0,0,elementHolderInnerBackground.ElementHolderInnerBackgroundList.AbsoluteContentSize.Y + elementHolderInnerBackgroundPaddings)})
-						searchBarInstanceOpenTween = TweenService:Create(searchBarInstance, TweenInfo.new(.25, Enum.EasingStyle.Linear), {Size = UDim2.new(1,0,0,elementHolderInnerBackground.ElementHolderInnerBackgroundList.AbsoluteContentSize.Y + elementHolderInnerBackgroundPaddings + searchBarInstance.SearchBarFrame.Size.Y.Offset)})	
-						elementHolderOpenTween:Play()		
-					end
-					
-					searchBarInstanceOpenTween:Play()
-				else
-					elementHolder.Size = UDim2.new(.925,0,0,elementHolderInnerBackground.ElementHolderInnerBackgroundList.AbsoluteContentSize.Y + elementHolderInnerBackgroundPaddings)
-					if elementHolderInnerBackground.ElementHolderInnerBackgroundList.AbsoluteContentSize.Y == 0 then
-						searchBarInstanceOpenTween = TweenService:Create(searchBarInstance, TweenInfo.new(.25, Enum.EasingStyle.Linear), {Size = UDim2.new(1,0,0,searchBarInstance.SearchBarFrame.Size.Y.Offset)})
-					else
-						searchBarInstanceOpenTween = TweenService:Create(searchBarInstance, TweenInfo.new(.25, Enum.EasingStyle.Linear), {Size = UDim2.new(1,0,0,elementHolderInnerBackground.ElementHolderInnerBackgroundList.AbsoluteContentSize.Y + elementHolderInnerBackgroundPaddings + searchBarInstance.SearchBarFrame.Size.Y.Offset)})
-					end	
+				if InputSettings.RemoveTextAfterFocusLost then
+					Input.InputFrame.InputBox.Text = ""
 				end
+				SaveConfiguration()
 			end)
-			
-			searchBox.PlaceholderText = placeholderText or "N/A"
-			
-			searchBarInstance.Parent = self.ElementToParentChildren
-			searchBox.Size = UDim2.new(1,-(searchBox.Parent.SearchImage.AbsoluteSize.X + searchBox.Parent.ButtonBackgroundPadding.PaddingRight.Offset),1,0)
-			searchBarInstanceOpenTween = TweenService:Create(searchBarInstance, TweenInfo.new(.25, Enum.EasingStyle.Linear), {Size = UDim2.new(1,0,0,searchBarInstance.SearchBarFrame.Size.Y.Offset)})	
-			
-			return searchBar
+
+			Input.MouseEnter:Connect(function()
+				TweenService:Create(Input, TweenInfo.new(0.6, Enum.EasingStyle.Quint), {BackgroundColor3 = SelectedTheme.ElementBackgroundHover}):Play()
+			end)
+
+			Input.MouseLeave:Connect(function()
+				TweenService:Create(Input, TweenInfo.new(0.6, Enum.EasingStyle.Quint), {BackgroundColor3 = SelectedTheme.ElementBackground}):Play()
+			end)
+
+			Input.InputFrame.InputBox:GetPropertyChangedSignal("Text"):Connect(function()
+				TweenService:Create(Input.InputFrame, TweenInfo.new(0.55, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {Size = UDim2.new(0, Input.InputFrame.InputBox.TextBounds.X + 24, 0, 30)}):Play()
+			end)
 		end
 
 		-- Dropdown
