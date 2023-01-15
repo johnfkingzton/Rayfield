@@ -1703,6 +1703,7 @@ function RayfieldLibrary:CreateWindow(Settings)
 									local item = string.lower(Element.Title.Text)
 									if string.find(item, search) then
 										Element.Visible = true
+										print("found")
 									else
 										Element.Visible = false
 									end
