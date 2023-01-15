@@ -1613,68 +1613,13 @@ function RayfieldLibrary:CreateWindow(Settings)
 
 			return ParagraphValue
 		end
-
-
-		function UpdateResults()
-			local search = string.lower(SearchBox.Text)
-			for i, v in	 pairs(SectionContainer:GetChildren()) do
-				if v:IsA("Frame") then
-					if search ~= "" then
-						if v.Name == "Button" then
-							local item = string.lower(v.Title.Text)
-							if string.find(item, search) then
-								v.Visible = true
-							else
-								v.Visible = false
-							end
-						elseif v.Name == "Label" then
-							local item = string.lower(v.LabelContent.Text)
-							if string.find(item, search) then
-								v.Visible = true
-							else
-								v.Visible = false
-							end
-						elseif v.Name == "Slider" then
-							local item = string.lower(v.Title.Text)
-							if string.find(item, search) then
-								v.Visible = true
-							else
-								v.Visible = false
-							end
-						elseif v.Name == "TextBox" then
-							local item = string.lower(v.Container.TextInput.Text)
-							if string.find(item, search) then
-								v.Visible = true
-							else
-								v.Visible = false
-							end
-						elseif v.Name == "Keybind" then
-							local item = string.lower(v.Container.Title.Text)
-							if string.find(item, search) then
-								v.Visible = true
-							else
-								v.Visible = false
-							end
-						elseif v.Name == "Toggle" then
-							local item = string.lower(v.Title.Text)
-							if string.find(item, search) then
-								v.Visible = true
-							else
-								v.Visible = false
-							end
-						end
-					else
-						v.Visible = true
-					end
-				end
-			end
-		end
 		-- Search
 		function Tab:CreateSearch(InputSettings)
 			local Input = Elements.Template.Input:Clone()
 			Input.Name = InputSettings.Name
 			Input.Title.Text = InputSettings.Name
 			Input.Visible = true
+			Input.Title = false
 			Input.Parent = TabPage
 
 			Input.BackgroundTransparency = 1
