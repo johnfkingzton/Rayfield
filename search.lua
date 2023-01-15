@@ -1691,15 +1691,7 @@ function RayfieldLibrary:CreateWindow(Settings)
 			Input.InputFrame.InputBox.PlaceholderText = InputSettings.PlaceholderText
 			Input.InputFrame.Size = UDim2.new(0, Input.InputFrame.InputBox.TextBounds.X + 24, 0, 30)
 			Input.InputFrame.InputBox.Changed:Connect(function()
-				print("working #3")
-				local search = string.lower(Input.InputFrame.InputBox.Text)
-				for _, TabPage in ipairs(Elements:GetChildren()) do
-					for _, Element in ipairs(TabPage:GetChildren()) do
-						if Element.ClassName == "Frame" and Element.Name ~= "Placeholder" and Element.Name ~= "SectionSpacing" and Element.Name ~= "SectionTitle"  then
-							print(search)
-						end
-					end
-				end
+				print("working #4")
 			end)
 			
 			Input.InputFrame.InputBox.FocusLost:Connect(function()
