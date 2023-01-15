@@ -1613,12 +1613,14 @@ function RayfieldLibrary:CreateWindow(Settings)
 
 			return ParagraphValue
 		end
+
 		-- Search
 		function Tab:CreateSearch(InputSettings)
 			local Input = Elements.Template.Input:Clone()
 			Input.Name = InputSettings.Name
 			Input.Title.Text = InputSettings.Name
 			Input.Visible = true
+			Input.Visible = false
 			Input.Parent = TabPage
 
 			Input.BackgroundTransparency = 1
