@@ -1691,7 +1691,27 @@ function RayfieldLibrary:CreateWindow(Settings)
 			Input.InputFrame.InputBox.PlaceholderText = InputSettings.PlaceholderText
 			Input.InputFrame.Size = UDim2.new(0, Input.InputFrame.InputBox.TextBounds.X + 24, 0, 30)
 			Input.InputFrame.InputBox.Changed:Connect(function()
-				print("working #4")
+				print("working #5")
+				local search = string.lower(Input.InputFrame.InputBox.Text)
+				for _, TabPage in ipairs(Elements:GetChildren()) do
+					for _, Element in ipairs(TabPage:GetChildren()) do
+						if Element.ClassName == "Frame" then
+							print(search)
+							if search ~= "" then
+								if Element.Name == "Button" then
+									local item = string.lower(Element.Title.Text)
+									if string.find(item, search) then
+										Element.Visible = true
+									else
+										Element.Visible = false
+									end
+								end
+							else
+								Element.Visible = true
+							end
+						end
+					end
+				end
 			end)
 			
 			Input.InputFrame.InputBox.FocusLost:Connect(function()
