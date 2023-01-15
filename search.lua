@@ -1619,7 +1619,6 @@ function RayfieldLibrary:CreateWindow(Settings)
 			Input.Name = InputSettings.Name
 			Input.Title.Text = InputSettings.Name
 			Input.Visible = true
-			Input.Title = false
 			Input.Parent = TabPage
 
 			Input.BackgroundTransparency = 1
