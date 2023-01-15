@@ -1703,9 +1703,9 @@ function RayfieldLibrary:CreateWindow(Settings)
 									local item = string.lower(Element.Name)
 									if string.find(item, search) then
 										Element.Visible = true
-										print("found")
+										print("found1")
 									else
-										print("not vis")
+										print("not vis2")
 										Element.Visible = false
 									end
 							else
