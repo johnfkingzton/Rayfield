@@ -1700,7 +1700,7 @@ function RayfieldLibrary:CreateWindow(Settings)
 							print(Element.Name)
 							if search ~= "" then
 
-									local item = string.lower(Element.Title.Text)
+									local item = string.lower(Element.Name)
 									if string.find(item, search) then
 										Element.Visible = true
 										print("found")
