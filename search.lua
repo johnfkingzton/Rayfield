@@ -1691,7 +1691,7 @@ function RayfieldLibrary:CreateWindow(Settings)
 			Input.InputFrame.InputBox.PlaceholderText = InputSettings.PlaceholderText
 			Input.InputFrame.Size = UDim2.new(0, Input.InputFrame.InputBox.TextBounds.X + 24, 0, 30)
 			Input.InputFrame.InputBox.Changed:Connect(function()
-				local search = string.lower(SearchBox.Text)
+				local search = string.lower(Input.InputFrame.InputBox.Text)
 				for i, v in	 pairs(SectionContainer:GetChildren()) do
 					if v:IsA("Frame") then
 						if search ~= "" then
