@@ -1691,57 +1691,23 @@ function RayfieldLibrary:CreateWindow(Settings)
 			Input.InputFrame.InputBox.PlaceholderText = InputSettings.PlaceholderText
 			Input.InputFrame.Size = UDim2.new(0, Input.InputFrame.InputBox.TextBounds.X + 24, 0, 30)
 			Input.InputFrame.InputBox.Changed:Connect(function()
-				print("working")
-				local search = string.lower(Input.InputFrame.InputBox.Title.Text)
-				for i, v in	 pairs(TabPage:GetChildren()) do
-					if v:IsA("Element") then
-						Print("is frame")
-						if search ~= "" then
-							if v.Name == "Button" then
-								local item = string.lower(v.Title.Text)
-								if string.find(item, search) then
-									v.Visible = true
-								else
-									v.Visible = false
+				print("working1")
+				local search = string.lower(Input.InputFrame.InputBox.Text)
+				for _, TabPage in ipairs(Elements:GetChildren()) do
+					for _, Element in ipairs(TabPage:GetChildren()) do
+						if Element.ClassName == "Frame" then
+							if search ~= "" then
+								elseif v.Name == "Toggle" then
+									local item = string.lower(Element.Title.Text)
+									if string.find(item, search) then
+										v.Visible = true
+									else
+										v.Visible = false
+									end
 								end
-							elseif v.Name == "Label" then
-								local item = string.lower(v.LabelContent.Text)
-								if string.find(item, search) then
-									v.Visible = true
-								else
-									v.Visible = false
-								end
-							elseif v.Name == "Slider" then
-								local item = string.lower(v.Title.Text)
-								if string.find(item, search) then
-									v.Visible = true
-								else
-									v.Visible = false
-								end
-							elseif v.Name == "TextBox" then
-								local item = string.lower(v.Container.TextInput.Text)
-								if string.find(item, search) then
-									v.Visible = true
-								else
-									v.Visible = false
-								end
-							elseif v.Name == "Keybind" then
-								local item = string.lower(v.Container.Title.Text)
-								if string.find(item, search) then
-									v.Visible = true
-								else
-									v.Visible = false
-								end
-							elseif v.Name == "Toggle" then
-								local item = string.lower(v.Title.Text)
-								if string.find(item, search) then
-									v.Visible = true
-								else
-									v.Visible = false
-								end
+							else
+								v.Visible = true
 							end
-						else
-							v.Visible = true
 						end
 					end
 				end
