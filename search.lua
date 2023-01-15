@@ -1699,7 +1699,7 @@ function RayfieldLibrary:CreateWindow(Settings)
 							print(search)
 							print(Element.Name)
 							if search ~= "" then
-								if Element.Name == "Slider" then
+								if Element.Name == search then
 									local item = string.lower(Element.Title.Text)
 									if string.find(item, search) then
 										Element.Visible = true
