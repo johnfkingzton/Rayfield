@@ -1706,8 +1706,10 @@ function RayfieldLibrary:CreateWindow(Settings)
 										print("found1")
 									else
 										if Element.Name ~= "_search" then
-										print("not vis2")
-										Element.Visible = false
+											print("not vis2")
+											Element.Visible = false
+										else
+
 										end
 									end
 							else
