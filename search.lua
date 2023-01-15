@@ -1691,7 +1691,7 @@ function RayfieldLibrary:CreateWindow(Settings)
 			Input.InputFrame.InputBox.PlaceholderText = InputSettings.PlaceholderText
 			Input.InputFrame.Size = UDim2.new(0, Input.InputFrame.InputBox.TextBounds.X + 24, 0, 30)
 			Input.InputFrame.InputBox.Changed:Connect(function()
-				print("working1")
+				print("working #2")
 				local search = string.lower(Input.InputFrame.InputBox.Text)
 				for _, TabPage in ipairs(Elements:GetChildren()) do
 					for _, Element in ipairs(TabPage:GetChildren()) do
